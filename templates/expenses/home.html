@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>CampusPay</title>
+    </head>
+
+    <body>
+
+        <h1>CampusPay</h1>
+
+        <h2>Student Expense Management</h2>
+
+        <p>
+            Total Expenses:
+            <strong>Ksh {{ total }}</strong>
+        </p>
+
+        <a href="{% url 'expense_list' %}">
+            View Expenses
+        </a>
+
+        <br><br>
+
+        <a href="{% url 'add_expense' %}">
+            Add Expense
+        </a>
+
+    </body>
+</html>

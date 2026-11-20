@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>My Expenses</title>
+    </head>
+
+    <body>
+
+        <h1>My Expenses</h1>
+
+        <a href="{% url 'home' %}">Home</a>
+        |
+        <a href="{% url 'add_expense' %}">Add Expense</a>
+
+        <hr>
+
+        {% if expenses %}
+
+            {% for expense in expenses %}
+
+                <div>
+                    <h3>{{ expense.title }}</h3>
+
+                    <p>
+                        Amount:
+                        Ksh {{ expense.amount }}
+                    </p>
+
+                    <p>
+                        Category:
+                        {{ expense.category }}
+                    </p>
+
+                    <p>
+                        Date:
+                        {{ expense.date }}
+                    </p>
+
+                    {% if expense.description %}
+                        <p>
+                            {{ expense.description }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No expenses have been added yet.</p>
+
+        {% endif %}
+
+    </body>
+</html>
