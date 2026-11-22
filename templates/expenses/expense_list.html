@@ -1,58 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>My Expenses</title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
+{% block title %}
+CampusPay | Expenses
+{% endblock %}
 
-        <h1>My Expenses</h1>
 
-        <a href="{% url 'home' %}">Home</a>
-        |
-        <a href="{% url 'add_expense' %}">Add Expense</a>
+{% block content %}
 
-        <hr>
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <p class="section-label">
+                EXPENSE MANAGEMENT
+            </p>
+
+            <h1>
+                Track your expenses
+            </h1>
+
+            <p>
+                Keep your student spending organized
+                and easy to understand.
+            </p>
+
+        </div>
+
+
+        <div style="margin-bottom: 30px;">
+
+            <a
+                href="{% url 'add_expense' %}"
+                class="btn btn-primary"
+            >
+                + Add Expense
+            </a>
+
+        </div>
+
 
         {% if expenses %}
 
-            {% for expense in expenses %}
+            <div class="expense-list">
 
-                <div>
-                    <h3>{{ expense.title }}</h3>
+                {% for expense in expenses %}
 
-                    <p>
-                        Amount:
-                        Ksh {{ expense.amount }}
-                    </p>
+                    <div class="expense-item">
 
-                    <p>
-                        Category:
-                        {{ expense.category }}
-                    </p>
+                        <div>
 
-                    <p>
-                        Date:
-                        {{ expense.date }}
-                    </p>
+                            <div class="expense-title">
+                                {{ expense.title }}
+                            </div>
 
-                    {% if expense.description %}
-                        <p>
-                            {{ expense.description }}
-                        </p>
-                    {% endif %}
-                </div>
+                            <div class="expense-meta">
 
-                <hr>
+                                {{ expense.category }}
 
-            {% endfor %}
+                                ·
+
+                                {{ expense.date }}
+
+                            </div>
+
+                            {% if expense.description %}
+
+                                <div class="expense-meta">
+
+                                    {{ expense.description }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="expense-amount">
+
+                            Ksh {{ expense.amount }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
 
         {% else %}
 
-            <p>No expenses have been added yet.</p>
+            <div class="card">
+
+                <h2>
+                    No expenses yet
+                </h2>
+
+                <br>
+
+                <p>
+                    You haven't recorded any expenses.
+                    Start tracking your spending today.
+                </p>
+
+                <br>
+
+                <a
+                    href="{% url 'add_expense' %}"
+                    class="btn btn-primary"
+                >
+                    Add Your First Expense
+                </a>
+
+            </div>
 
         {% endif %}
 
-    </body>
-</html>
+    </div>
+
+</section>
+
+{% endblock %}

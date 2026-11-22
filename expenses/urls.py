@@ -24,4 +24,10 @@ urlpatterns = [
         views.PaymentAPIView.as_view(),
         name="api_payments",
     ),
+
+    path(
+        "api/payments/callback/",
+        views.mpesa_callback,
+        name="mpesa_callback",
+    ),
 ]

@@ -1,4 +1,8 @@
+import json
+
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -219,3 +223,88 @@ class PaymentAPIView(APIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+@csrf_exempt
+def mpesa_callback(request):
+    if request.method != "POST":
+        return JsonResponse(
+            {
+                "error": "Only POST requests are allowed."
+            },
+            status=405,
+        )
+
+    try:
+        data = json.loads(request.body)
+
+        callback = data.get("Body", {}).get(
+            "stkCallback", {}
+        )
+
+        checkout_request_id = callback.get(
+            "CheckoutRequestID"
+        )
+
+        result_code = callback.get("ResultCode")
+        result_description = callback.get(
+            "ResultDesc"
+        )
+
+        payment = Payment.objects.filter(
+            checkout_request_id=checkout_request_id
+        ).first()
+
+        if payment:
+
+            payment.result_description = (
+                result_description
+            )
+
+            if result_code == 0:
+
+                payment.status = "Completed"
+
+                callback_metadata = callback.get(
+                    "CallbackMetadata", {}
+                )
+
+                items = callback_metadata.get(
+                    "Item", []
+                )
+
+                for item in items:
+
+                    if item.get("Name") == "MpesaReceiptNumber":
+
+                        payment.mpesa_receipt_number = (
+                            item.get("Value")
+                        )
+
+                        break
+
+            else:
+
+                payment.status = "Failed"
+
+            payment.save()
+
+        return JsonResponse(
+            {
+                "ResultCode": 0,
+                "ResultDesc": "Callback received successfully",
+            }
+        )
+
+    except Exception as error:
+
+        print(
+            f"M-Pesa callback error: {error}"
+        )
+
+        return JsonResponse(
+            {
+                "ResultCode": 1,
+                "ResultDesc": "Callback processing failed",
+            },
+            status=500,
+        )

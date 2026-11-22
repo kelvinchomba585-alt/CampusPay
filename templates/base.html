@@ -1,0 +1,166 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+
+        <title>
+            {% block title %}CampusPay{% endblock %}
+        </title>
+
+        <link
+            rel="stylesheet"
+            href="{% static 'css/style.css' %}"
+        >
+    </head>
+
+    <body>
+
+        <!-- Navigation -->
+
+        <header class="navbar">
+
+            <div class="container navbar-inner">
+
+                <a href="{% url 'home' %}" class="brand">
+
+                    <div class="brand-icon">
+                        C
+                    </div>
+
+                    Campus<span>Pay</span>
+
+                </a>
+
+
+                <nav class="nav-links">
+
+                    <a href="{% url 'home' %}">
+                        Dashboard
+                    </a>
+
+                    <a href="{% url 'expense_list' %}">
+                        Expenses
+                    </a>
+
+                    <a href="{% url 'add_expense' %}">
+                        Add Expense
+                    </a>
+
+                    <a href="{% url 'api_expenses' %}">
+                        API
+                    </a>
+
+                    <a
+                        href="{% url 'admin:index' %}"
+                        class="nav-button"
+                    >
+                        Admin
+                    </a>
+
+                </nav>
+
+            </div>
+
+        </header>
+
+
+        <!-- Main Content -->
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+
+        <!-- Footer -->
+
+        <footer class="footer">
+
+            <div class="container footer-grid">
+
+                <div>
+
+                    <div class="brand">
+
+                        <div class="brand-icon">
+                            C
+                        </div>
+
+                        Campus<span>Pay</span>
+
+                    </div>
+
+                    <br>
+
+                    <p>
+                        A student expense and payment
+                        management platform.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3>Quick Links</h3>
+
+                    <div class="footer-links">
+
+                        <a href="{% url 'home' %}">
+                            Dashboard
+                        </a>
+
+                        <a href="{% url 'expense_list' %}">
+                            Expenses
+                        </a>
+
+                        <a href="{% url 'add_expense' %}">
+                            Add Expense
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <h3>CampusPay</h3>
+
+                    <div class="footer-links">
+
+                        <a href="{% url 'api_expenses' %}">
+                            REST API
+                        </a>
+
+                        <a href="{% url 'admin:index' %}">
+                            Administration
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="container footer-bottom">
+
+                © 2026 CampusPay.
+                Student Expense & Payment Management System.
+
+            </div>
+
+        </footer>
+
+    </body>
+
+</html>

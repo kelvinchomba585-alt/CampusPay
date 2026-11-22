@@ -1,0 +1,493 @@
+/* ==============================
+   CampusPay Design System
+   ============================== */
+
+:root {
+    --green-dark: #0b3328;
+    --green: #167a4b;
+    --green-light: #dff3e8;
+    --yellow: #f8d447;
+    --yellow-dark: #e6bd24;
+
+    --background: #f5f8f5;
+    --white: #ffffff;
+    --text: #16352b;
+    --muted: #6d7c76;
+    --border: #d9e4de;
+
+    --shadow: 0 8px 24px rgba(11, 51, 40, 0.10);
+    --radius: 16px;
+    --container: 1180px;
+}
+
+
+/* ==============================
+   Reset
+   ============================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+/* ==============================
+   Container
+   ============================== */
+
+.container {
+    width: min(92%, var(--container));
+    margin: 0 auto;
+}
+
+
+/* ==============================
+   Navigation
+   ============================== */
+
+.navbar {
+    background: var(--green-dark);
+    color: white;
+    padding: 16px 0;
+}
+
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--green);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: white;
+}
+
+
+.brand span {
+    color: var(--yellow);
+}
+
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+
+.nav-links a {
+    color: #e7f0eb;
+    font-size: 0.95rem;
+    transition: 0.2s ease;
+}
+
+
+.nav-links a:hover {
+    color: var(--yellow);
+}
+
+
+.nav-button {
+    background: var(--yellow);
+    color: var(--green-dark) !important;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+
+/* ==============================
+   Hero
+   ============================== */
+
+.hero {
+    background:
+        linear-gradient(
+            135deg,
+            var(--green-dark),
+            #125d3e
+        );
+
+    color: white;
+    padding: 80px 0;
+}
+
+
+.hero-content {
+    max-width: 760px;
+}
+
+
+.hero h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+
+.hero p {
+    max-width: 650px;
+    color: #d9e8e1;
+    font-size: 1.05rem;
+    margin-bottom: 30px;
+}
+
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+
+/* ==============================
+   Buttons
+   ============================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 22px;
+    border-radius: 999px;
+
+    border: none;
+    cursor: pointer;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+
+.btn-primary {
+    background: var(--yellow);
+    color: var(--green-dark);
+    box-shadow: 0 8px 20px rgba(248, 212, 71, 0.25);
+}
+
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+.btn-green {
+    background: var(--green);
+    color: white;
+}
+
+
+/* ==============================
+   Sections
+   ============================== */
+
+.section {
+    padding: 70px 0;
+}
+
+
+.section-light {
+    background: var(--white);
+}
+
+
+.section-heading {
+    margin-bottom: 30px;
+}
+
+
+.section-label {
+    color: var(--green);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+
+.section-heading h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.2;
+}
+
+
+/* ==============================
+   Dashboard Cards
+   ============================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 25px;
+}
+
+
+.stat-card {
+    border-top: 4px solid var(--green);
+}
+
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--green-dark);
+}
+
+
+/* ==============================
+   Expense List
+   ============================== */
+
+.expense-list {
+    display: grid;
+    gap: 14px;
+}
+
+
+.expense-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    background: white;
+    padding: 20px;
+
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+
+.expense-title {
+    font-weight: 700;
+}
+
+
+.expense-meta {
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+
+.expense-amount {
+    font-weight: 800;
+    color: var(--green);
+}
+
+
+/* ==============================
+   Forms
+   ============================== */
+
+.form-card {
+    max-width: 720px;
+    margin: 40px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+
+.form-card h1 {
+    margin-bottom: 10px;
+}
+
+
+.form-card > p {
+    color: var(--muted);
+    margin-bottom: 30px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 700;
+}
+
+
+.form-control,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px 15px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: white;
+    font-size: 1rem;
+    color: var(--text);
+
+    outline: none;
+}
+
+
+.form-control:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(22, 122, 75, 0.10);
+}
+
+
+/* ==============================
+   Footer
+   ============================== */
+
+.footer {
+    background: var(--green-dark);
+    color: #d7e4de;
+    padding: 50px 0 25px;
+    margin-top: 70px;
+}
+
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+}
+
+
+.footer h3 {
+    color: var(--yellow);
+    margin-bottom: 15px;
+}
+
+
+.footer p,
+.footer a {
+    color: #b8cbc3;
+    font-size: 0.9rem;
+}
+
+
+.footer-links {
+    display: grid;
+    gap: 8px;
+}
+
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    margin-top: 35px;
+    padding-top: 20px;
+    font-size: 0.8rem;
+}
+
+
+/* ==============================
+   Responsive
+   ============================== */
+
+@media (max-width: 800px) {
+
+    .navbar-inner {
+        flex-wrap: wrap;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .expense-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .form-card {
+        padding: 25px;
+    }
+}

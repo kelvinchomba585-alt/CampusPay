@@ -1,31 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Add Expense</title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
+{% block title %}
+CampusPay | Add Expense
+{% endblock %}
 
-        <h1>Add Expense</h1>
 
-        <form method="post">
+{% block content %}
 
-            {% csrf_token %}
+<section class="section">
 
-            {{ form.as_p }}
+    <div class="container">
 
-            <button type="submit">
-                Add Expense
-            </button>
+        <div class="form-card">
 
-        </form>
+            <p class="section-label">
+                EXPENSE MANAGEMENT
+            </p>
 
-        <br>
+            <h1>
+                Add a new expense
+            </h1>
 
-        <a href="{% url 'home' %}">
-            Back to Home
-        </a>
+            <p>
+                Record your spending to keep your
+                CampusPay finances up to date.
+            </p>
 
-    </body>
-</html>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                {% if form.non_field_errors %}
+
+                    <div class="card">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% for field in form %}
+
+                    <div class="form-group">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <small>
+                                {{ field.help_text }}
+                            </small>
+
+                        {% endif %}
+
+
+                        {% for error in field.errors %}
+
+                            <small style="color: #b42318;">
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endfor %}
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Save Expense
+                </button>
+
+
+                <a
+                    href="{% url 'expense_list' %}"
+                    class="btn btn-green"
+                    style="margin-left: 8px;"
+                >
+                    View Expenses
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
