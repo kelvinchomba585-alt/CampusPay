@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}CampusPay | Payments{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="section-label">M-PESA PAYMENTS</p>
+            <h1>Make a payment</h1>
+            <p>
+                Make a secure student payment using M-Pesa.
+                Enter your phone number and amount below.
+            </p>
+        </div>
+
+        <div class="form-card payment-card">
+
+            <div id="payment-message" class="payment-message"></div>
+
+            <form id="payment-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="phone_number">M-Pesa Phone Number</label>
+                    <input
+                        type="text"
+                        id="phone_number"
+                        name="phone_number"
+                        placeholder="254712345678"
+                        required
+                    >
+                    <small>
+                        Enter your Safaricom number in the format 2547XXXXXXXX.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount (Ksh)</label>
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        min="1"
+                        step="1"
+                        placeholder="100"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    id="pay-button"
+                    class="btn btn-primary"
+                >
+                    Pay with M-Pesa
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+<script>
+document.getElementById("payment-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const button = document.getElementById("pay-button");
+    const message = document.getElementById("payment-message");
+
+    const phoneNumber = document.getElementById("phone_number").value.trim();
+    const amount = document.getElementById("amount").value;
+
+    button.disabled = true;
+    button.textContent = "Processing...";
+
+    message.className = "payment-message";
+    message.textContent = "";
+
+    try {
+        const csrfToken = document.querySelector(
+    "[name=csrfmiddlewaretoken]"
+).value;
+
+const response = await fetch("{% url 'api_payment' %}", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken
+    },
+    body: JSON.stringify({
+        phone_number: phoneNumber,
+        amount: amount
+    })
+});
+
+        const data = await response.json();
+
+        if (response.ok) {
+            message.className = "payment-message success";
+
+            message.textContent =
+                "Success! " +
+                (data.mpesa_response?.CustomerMessage ||
+                "Request accepted for processing.");
+
+            console.log("M-Pesa response:", data);
+        }else {
+            message.className = "payment-message error";
+            message.textContent =
+                data.error || "Unable to start the payment.";
+        }
+
+    } catch (error) {
+        message.className = "payment-message error";
+        message.textContent =
+            "Unable to connect to the payment service.";
+    }
+
+    button.disabled = false;
+    button.textContent = "Pay with M-Pesa";
+});
+</script>
+
+{% endblock %}

@@ -13,9 +13,9 @@ from .forms import ExpenseForm
 from .serializers import ExpenseSerializer
 from .mpesa import initiate_stk_push
 
+
 def home(request):
     expenses = Expense.objects.all().order_by("-date", "-created_at")
-
     total = sum(expense.amount for expense in expenses)
 
     context = {
@@ -53,92 +53,19 @@ def add_expense(request):
     )
 
 
+def payments_page(request):
+    return render(request, "expenses/payments.html")
+
+
 class ExpenseListCreateAPIView(generics.ListCreateAPIView):
     queryset = Expense.objects.all().order_by("-date", "-created_at")
     serializer_class = ExpenseSerializer
+
 
 class ExpenseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
 
-class PaymentAPIView(APIView):
-
-    def post(self, request):
-        phone_number = request.data.get("phone_number")
-        amount = request.data.get("amount")
-
-        if not phone_number:
-            return Response(
-                {"error": "Phone number is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if not amount:
-            return Response(
-                {"error": "Amount is required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            amount = float(amount)
-
-            if amount <= 0:
-                raise ValueError
-
-        except (ValueError, TypeError):
-            return Response(
-                {"error": "Amount must be greater than 0."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        payment = Payment.objects.create(
-            phone_number=phone_number,
-            amount=amount,
-        )
-
-        try:
-            response = initiate_stk_push(
-                phone_number,
-                amount,
-            )
-
-            payment.checkout_request_id = response.get(
-                "CheckoutRequestID"
-            )
-
-            payment.merchant_request_id = response.get(
-                "MerchantRequestID"
-            )
-
-            payment.result_description = response.get(
-                "CustomerMessage"
-            )
-
-            payment.save()
-
-            return Response(
-                {
-                    "message": "STK Push initiated successfully.",
-                    "payment_id": payment.id,
-                    "response": response,
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        except Exception as error:
-
-            payment.status = "Failed"
-            payment.result_description = str(error)
-            payment.save()
-
-            return Response(
-                {
-                    "error": "Unable to initiate M-Pesa payment.",
-                    "details": str(error),
-                    "payment_id": payment.id,
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
 
 class PaymentAPIView(APIView):
 
@@ -186,6 +113,7 @@ class PaymentAPIView(APIView):
                 account_reference=f"CampusPay-{payment.id}",
                 description="CampusPay Student Payment",
             )
+            # print("DARAJA RESPONSE:", mpesa_response)
 
             payment.checkout_request_id = mpesa_response.get(
                 "CheckoutRequestID"
@@ -224,6 +152,7 @@ class PaymentAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+
 @csrf_exempt
 def mpesa_callback(request):
     if request.method != "POST":
@@ -237,8 +166,12 @@ def mpesa_callback(request):
     try:
         data = json.loads(request.body)
 
-        callback = data.get("Body", {}).get(
-            "stkCallback", {}
+        callback = data.get(
+            "Body",
+            {}
+        ).get(
+            "stkCallback",
+            {}
         )
 
         checkout_request_id = callback.get(
@@ -246,44 +179,45 @@ def mpesa_callback(request):
         )
 
         result_code = callback.get("ResultCode")
+
         result_description = callback.get(
             "ResultDesc"
         )
 
+        # payment = Payment.objects.filter(
+        #     checkout_request_id=checkout_request_id
+        # ).first()
         payment = Payment.objects.filter(
             checkout_request_id=checkout_request_id
         ).first()
 
-        if payment:
+        print("CALLBACK CHECKOUT REQUEST ID:", checkout_request_id)
+        print("PAYMENT FOUND:", payment)
 
-            payment.result_description = (
-                result_description
-            )
+        if payment:
+            payment.result_description = result_description
 
             if result_code == 0:
-
                 payment.status = "Completed"
 
                 callback_metadata = callback.get(
-                    "CallbackMetadata", {}
+                    "CallbackMetadata",
+                    {}
                 )
 
                 items = callback_metadata.get(
-                    "Item", []
+                    "Item",
+                    []
                 )
 
                 for item in items:
-
                     if item.get("Name") == "MpesaReceiptNumber":
-
-                        payment.mpesa_receipt_number = (
-                            item.get("Value")
+                        payment.mpesa_receipt_number = item.get(
+                            "Value"
                         )
-
                         break
 
             else:
-
                 payment.status = "Failed"
 
             payment.save()
@@ -296,7 +230,6 @@ def mpesa_callback(request):
         )
 
     except Exception as error:
-
         print(
             f"M-Pesa callback error: {error}"
         )

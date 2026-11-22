@@ -1,12 +1,27 @@
 from django.urls import path
 from . import views
 
-
 urlpatterns = [
     path("", views.home, name="home"),
-    path("expenses/", views.expense_list, name="expense_list"),
-    path("expenses/add/", views.add_expense, name="add_expense"),
-    
+
+    path(
+        "expenses/",
+        views.expense_list,
+        name="expense_list",
+    ),
+
+    path(
+        "expenses/add/",
+        views.add_expense,
+        name="add_expense",
+    ),
+
+    path(
+        "payments/",
+        views.payments_page,
+        name="payments",
+    ),
+
     path(
         "api/expenses/",
         views.ExpenseListCreateAPIView.as_view(),
@@ -22,7 +37,7 @@ urlpatterns = [
     path(
         "api/payments/",
         views.PaymentAPIView.as_view(),
-        name="api_payments",
+        name="api_payment",
     ),
 
     path(
